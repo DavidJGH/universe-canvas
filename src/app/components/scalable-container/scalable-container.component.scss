@@ -1,0 +1,16 @@
+:host {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.scalable-container {
+  display: inline-block;
+}
+
+.scalable-content {
+  display: inline-block;
+  position: relative;
+}
