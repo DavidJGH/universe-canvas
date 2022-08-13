@@ -1,6 +1,6 @@
-import {Injectable, SecurityContext} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {DomSanitizer} from "@angular/platform-browser";
-import {AngularFirestore, DocumentSnapshot} from "@angular/fire/compat/firestore";
+import {AngularFirestore} from "@angular/fire/compat/firestore";
 
 @Injectable({
   providedIn: 'root'
