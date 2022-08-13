@@ -1,5 +1,5 @@
 import {Component, HostListener, OnInit} from '@angular/core';
-import {IMAGE_HEIGHT, IMAGE_WIDTH} from "../../config/config";
+import {CanvasService} from "../../services/canvas-service/canvas.service";
 
 @Component({
   selector: 'app-scalable-container',
@@ -19,8 +19,8 @@ export class ScalableContainerComponent implements OnInit {
 
   ngOnInit(): void {
     const center = this.getScreenCenter();
-    this.xPosition = center.x - IMAGE_WIDTH / 2;
-    this.yPosition = center.y - IMAGE_HEIGHT / 2;
+    this.xPosition = center.x - CanvasService.WIDTH / 2;
+    this.yPosition = center.y - CanvasService.HEIGHT / 2;
   }
 
   @HostListener('wheel', ['$event'])
@@ -35,12 +35,12 @@ export class ScalableContainerComponent implements OnInit {
 
     const scaleChange = this.scale / previousScale;
 
-    const centerX = this.xPosition + IMAGE_WIDTH / 2;
-    const centerY = this.yPosition + IMAGE_HEIGHT / 2;
+    const centerX = this.xPosition + CanvasService.WIDTH / 2;
+    const centerY = this.yPosition + CanvasService.HEIGHT / 2;
 
     this.setPosition(
-        $event.clientX - ($event.clientX - centerX) * scaleChange - IMAGE_WIDTH / 2,
-        $event.clientY - ($event.clientY - centerY) * scaleChange - IMAGE_HEIGHT / 2);
+        $event.clientX - ($event.clientX - centerX) * scaleChange - CanvasService.WIDTH / 2,
+        $event.clientY - ($event.clientY - centerY) * scaleChange - CanvasService.HEIGHT / 2);
   }
 
   @HostListener('mousemove', ['$event'])
@@ -52,8 +52,8 @@ export class ScalableContainerComponent implements OnInit {
 
   private setPosition(x: number, y: number) {
     const center = this.getScreenCenter();
-    this.xPosition = Math.min(center.x + (IMAGE_WIDTH * (this.scale - 1)) / 2, Math.max(center.x - (IMAGE_WIDTH * (this.scale + 1)) / 2, x));
-    this.yPosition = Math.min(center.y + (IMAGE_HEIGHT * (this.scale - 1)) / 2, Math.max(center.y - (IMAGE_HEIGHT * (this.scale + 1)) / 2, y));
+    this.xPosition = Math.min(center.x + (CanvasService.WIDTH * (this.scale - 1)) / 2, Math.max(center.x - (CanvasService.WIDTH * (this.scale + 1)) / 2, x));
+    this.yPosition = Math.min(center.y + (CanvasService.HEIGHT * (this.scale - 1)) / 2, Math.max(center.y - (CanvasService.HEIGHT * (this.scale + 1)) / 2, y));
   }
 
   private getScreenCenter(): {x: number, y: number} {

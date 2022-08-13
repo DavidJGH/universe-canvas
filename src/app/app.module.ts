@@ -12,6 +12,7 @@ import { provideMessaging,getMessaging } from '@angular/fire/messaging';
 import { providePerformance,getPerformance } from '@angular/fire/performance';
 import {DrawCanvasComponent} from "./components/draw-canvas/draw-canvas.component";
 import {ScalableContainerComponent} from "./components/scalable-container/scalable-container.component";
+import {AngularFireModule} from "@angular/fire/compat";
 
 @NgModule({
   declarations: [
@@ -21,6 +22,7 @@ import {ScalableContainerComponent} from "./components/scalable-container/scalab
   ],
   imports: [
     BrowserModule,
+    AngularFireModule.initializeApp(environment.firebase),
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAnalytics(() => getAnalytics()),
     provideAuth(() => getAuth()),
