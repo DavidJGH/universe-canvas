@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "universe-canvas": {
+      "hosting": {
+        "universe-canvas-firebase": [
+          "universe-canvas"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "universe-canvas"
+  }
+}
