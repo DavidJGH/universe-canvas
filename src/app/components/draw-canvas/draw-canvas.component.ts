@@ -1,5 +1,7 @@
 import {AfterViewInit, Component, ElementRef, ViewChild} from '@angular/core';
 import {CanvasService} from "../../services/canvas-service/canvas.service";
+import {helloWorld} from "../../../../functions/src";
+import {AngularFireFunctions} from "@angular/fire/compat/functions";
 
 @Component({
   selector: 'app-draw-canvas',
@@ -10,13 +12,13 @@ export class DrawCanvasComponent implements AfterViewInit{
 
   @ViewChild('drawCanvas') canvas!: ElementRef;
 
-  canvasContext: CanvasRenderingContext2D | null = null;
-
-  constructor(private readonly canvasService: CanvasService) {
+  constructor(private readonly canvasService: CanvasService, private readonly fireFunctions: AngularFireFunctions) {
   }
 
   ngAfterViewInit(): void {
     this.canvasService.updateCanvasContinuously(this.canvas.nativeElement)
+    const myFunction = this.fireFunctions.httpsCallable('helloWorld');
+    myFunction({}).subscribe((result) => console.log(result));
   }
 
 }
