@@ -4,7 +4,9 @@ import * as functions from 'firebase-functions';
 // // https://firebase.google.com/docs/functions/typescript
 //
 
-const cors = require('cors')({ origin: true });
+const cors = require('cors')({
+  origin: ['http://localhost:4200', 'https://universe-canvas.web.app/'],
+});
 
 export const helloWorld = functions.https.onRequest((request, response) => {
   cors(request, response, () => {
