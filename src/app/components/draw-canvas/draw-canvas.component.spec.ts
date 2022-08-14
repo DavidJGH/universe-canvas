@@ -8,9 +8,8 @@ describe('DrawCanvasComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ DrawCanvasComponent ]
-    })
-    .compileComponents();
+      declarations: [DrawCanvasComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {
