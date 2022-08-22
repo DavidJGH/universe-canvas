@@ -1,12 +1,15 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { CanvasService } from '../../services/canvas-service/canvas.service';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-scalable-container',
   templateUrl: './scalable-container.component.html',
   styleUrls: ['./scalable-container.component.scss'],
 })
-export class ScalableContainerComponent implements OnInit {
+export class ScalableContainerComponent implements OnInit, OnDestroy {
+  private unsubscribe$: Subject<void> = new Subject();
+
   xPosition = 0.0;
   yPosition = 0.0;
   scale = 1.0;
@@ -16,10 +19,23 @@ export class ScalableContainerComponent implements OnInit {
   maxScale = 40;
   minScale = 0.5;
 
+  canvasWidth = 0;
+  canvasHeight = 0;
+
+  constructor(private readonly canvasService: CanvasService) {}
+
   ngOnInit(): void {
-    const center = this.getScreenCenter();
-    this.xPosition = center.x - CanvasService.WIDTH / 2;
-    this.yPosition = center.y - CanvasService.HEIGHT / 2;
+    this.canvasService.canvas$
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(canvas => {
+        if (this.canvasWidth === 0) {
+          const center = this.getScreenCenter();
+          this.xPosition = center.x - canvas.width / 2;
+          this.yPosition = center.y - canvas.height / 2;
+        }
+        this.canvasWidth = canvas.width;
+        this.canvasHeight = canvas.height;
+      });
   }
 
   @HostListener('wheel', ['$event'])
@@ -33,16 +49,16 @@ export class ScalableContainerComponent implements OnInit {
 
     const scaleChange = this.scale / previousScale;
 
-    const centerX = this.xPosition + CanvasService.WIDTH / 2;
-    const centerY = this.yPosition + CanvasService.HEIGHT / 2;
+    const centerX = this.xPosition + this.canvasWidth / 2;
+    const centerY = this.yPosition + this.canvasHeight / 2;
 
     this.setPosition(
       $event.clientX -
         ($event.clientX - centerX) * scaleChange -
-        CanvasService.WIDTH / 2,
+        this.canvasWidth / 2,
       $event.clientY -
         ($event.clientY - centerY) * scaleChange -
-        CanvasService.HEIGHT / 2
+        this.canvasHeight / 2
     );
   }
 
@@ -56,15 +72,20 @@ export class ScalableContainerComponent implements OnInit {
     }
   }
 
+  ngOnDestroy() {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
+
   private setPosition(x: number, y: number) {
     const center = this.getScreenCenter();
     this.xPosition = Math.min(
-      center.x + (CanvasService.WIDTH * (this.scale - 1)) / 2,
-      Math.max(center.x - (CanvasService.WIDTH * (this.scale + 1)) / 2, x)
+      center.x + (this.canvasWidth * (this.scale - 1)) / 2,
+      Math.max(center.x - (this.canvasWidth * (this.scale + 1)) / 2, x)
     );
     this.yPosition = Math.min(
-      center.y + (CanvasService.HEIGHT * (this.scale - 1)) / 2,
-      Math.max(center.y - (CanvasService.HEIGHT * (this.scale + 1)) / 2, y)
+      center.y + (this.canvasHeight * (this.scale - 1)) / 2,
+      Math.max(center.y - (this.canvasHeight * (this.scale + 1)) / 2, y)
     );
   }
 
