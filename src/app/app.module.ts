@@ -12,8 +12,6 @@ import {
 } from '@angular/fire/analytics';
 import { provideAuth, getAuth } from '@angular/fire/auth';
 import { provideFirestore, getFirestore } from '@angular/fire/firestore';
-import { provideFunctions, getFunctions } from '@angular/fire/functions';
-import { provideMessaging, getMessaging } from '@angular/fire/messaging';
 import { providePerformance, getPerformance } from '@angular/fire/performance';
 import { DrawCanvasComponent } from './components/draw-canvas/draw-canvas.component';
 import { ScalableContainerComponent } from './components/scalable-container/scalable-container.component';
@@ -28,8 +26,6 @@ import { AngularFireModule } from '@angular/fire/compat';
     provideAnalytics(() => getAnalytics()),
     provideAuth(() => getAuth()),
     provideFirestore(() => getFirestore()),
-    provideFunctions(() => getFunctions()),
-    provideMessaging(() => getMessaging()),
     providePerformance(() => getPerformance()),
   ],
   providers: [ScreenTrackingService, UserTrackingService],
