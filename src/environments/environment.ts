@@ -12,7 +12,7 @@ export const environment = {
     messagingSenderId: '715825851475',
     measurementId: 'G-5FCP1175W7',
   },
-  backendBase: 'https://91.109.116.37',
+  backendBase: 'https://canvas-backend.herdlicka.dev',
   production: false,
 };
 
