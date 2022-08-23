@@ -1,16 +1,15 @@
-<canvas #drawCanvas></canvas>
+<canvas
+  #drawCanvas
+  (mouseenter)="displayCursor = true"
+  (mouseleave)="displayCursor = false"
+  (mousemove)="cursorMove($event)"
+  (mousedown)="mouseDown($event)"
+  (mouseup)="mouseUp($event)"></canvas>
 
-<br />
-<input #inputElement />
 <div
-  style="
-    background: antiquewhite;
-    padding: 5px;
-    border-radius: 5px;
-    width: 50px;
-    cursor: pointer;
-    margin: 5px;
-  "
-  (click)="updateData()">
-  submit
-</div>
+  id="cursor"
+  [ngStyle]="{
+    display: displayCursor ? 'block' : 'none',
+    top: cursorY + 'px',
+    left: cursorX + 'px'
+  }"></div>

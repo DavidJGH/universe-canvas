@@ -1,6 +1,7 @@
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { CanvasService } from '../../services/canvas-service/canvas.service';
 import { Subject, takeUntil } from 'rxjs';
+import { getScreenCenter } from '../../utils/window.utils';
 
 @Component({
   selector: 'app-scalable-container',
@@ -29,7 +30,7 @@ export class ScalableContainerComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(canvas => {
         if (this.canvasWidth === 0) {
-          const center = this.getScreenCenter();
+          const center = getScreenCenter();
           this.xPosition = center.x - canvas.width / 2;
           this.yPosition = center.y - canvas.height / 2;
         }
@@ -78,7 +79,7 @@ export class ScalableContainerComponent implements OnInit, OnDestroy {
   }
 
   private setPosition(x: number, y: number) {
-    const center = this.getScreenCenter();
+    const center = getScreenCenter();
     this.xPosition = Math.min(
       center.x + (this.canvasWidth * (this.scale - 1)) / 2,
       Math.max(center.x - (this.canvasWidth * (this.scale + 1)) / 2, x)
@@ -87,9 +88,5 @@ export class ScalableContainerComponent implements OnInit, OnDestroy {
       center.y + (this.canvasHeight * (this.scale - 1)) / 2,
       Math.max(center.y - (this.canvasHeight * (this.scale + 1)) / 2, y)
     );
-  }
-
-  private getScreenCenter(): { x: number; y: number } {
-    return { x: window.innerWidth / 2, y: window.innerHeight / 2 };
   }
 }

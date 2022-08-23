@@ -7,6 +7,8 @@ import {
 } from '@angular/core';
 import { CanvasService } from '../../services/canvas-service/canvas.service';
 import { Subject, takeUntil } from 'rxjs';
+import { Vector } from '../../models/canvas.model';
+import { indexToRgb, mousePosToCanvasPos } from '../../utils/canvas.utils';
 
 @Component({
   selector: 'app-draw-canvas',
@@ -17,7 +19,12 @@ export class DrawCanvasComponent implements AfterViewInit, OnDestroy {
   private unsubscribe$: Subject<void> = new Subject();
 
   @ViewChild('drawCanvas') canvasElement!: ElementRef;
-  @ViewChild('inputElement') inputElement!: ElementRef;
+
+  displayCursor = false;
+  cursorX = 0;
+  cursorY = 0;
+
+  mouseDownAt: Vector = { x: 0, y: 0 };
 
   constructor(private readonly canvasService: CanvasService) {}
 
@@ -25,7 +32,7 @@ export class DrawCanvasComponent implements AfterViewInit, OnDestroy {
     this.canvasService.canvas$
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(canvas => {
-        const colorsRGB = canvas.content.map(index => this.toRgb(index));
+        const colorsRGB = canvas.content.map(index => indexToRgb(index));
 
         const canvasHTMLElement: HTMLCanvasElement =
           this.canvasElement.nativeElement;
@@ -47,34 +54,32 @@ export class DrawCanvasComponent implements AfterViewInit, OnDestroy {
       });
   }
 
-  updateData() {
-    const values = this.inputElement.nativeElement.value
-      .split(',')
-      .map((value: string) => parseInt(value));
-    this.canvasService.updatePixel(values[0], values[1], values[2]);
-  }
-
   ngOnDestroy() {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
   }
 
-  private toRgb(colorIndex: number): string {
-    let r = 0;
-    let g = 0;
-    let b = 0;
-    switch (colorIndex) {
-      case 0:
-        r = 255;
-        g = 255;
-        b = 255;
-        break;
-      case 2:
-        r = 255;
-        g = 0;
-        b = 0;
-        break;
+  cursorMove($event: MouseEvent) {
+    const canvasPos = mousePosToCanvasPos(
+      this.canvasElement.nativeElement,
+      $event
+    );
+    this.cursorX = canvasPos.x;
+    this.cursorY = canvasPos.y;
+  }
+
+  mouseDown($event: MouseEvent) {
+    this.mouseDownAt = { x: $event.x, y: $event.y };
+  }
+
+  mouseUp($event: MouseEvent) {
+    if (
+      Math.sqrt(
+        Math.pow(this.mouseDownAt.x - $event.x, 2) +
+          Math.pow(this.mouseDownAt.y - $event.y, 2)
+      ) < 1
+    ) {
+      this.canvasService.updatePixel(this.cursorX, this.cursorY, 1);
     }
-    return 'rgba(' + r + ',' + g + ',' + b + ', 1)';
   }
 }
