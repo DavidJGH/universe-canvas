@@ -12,7 +12,10 @@ export class CanvasService {
     width: 0,
     height: 0,
     content: [],
+    palette: [],
   });
+
+  selectedColorIndex = 0;
 
   canvas$ = this.canvasBehaviorSubject.asObservable();
 

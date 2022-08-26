@@ -1,0 +1,8 @@
+<div class="palette" *ngIf="palette$ | async as palette">
+  <div
+    class="color"
+    [class.active]="isActive(i)"
+    *ngFor="let color of palette; let i = index"
+    (click)="selectColor(i)"
+    [style.background-color]="color"></div>
+</div>

@@ -8,7 +8,7 @@ import {
 import { CanvasService } from '../../services/canvas-service/canvas.service';
 import { Subject, takeUntil } from 'rxjs';
 import { Vector } from '../../models/canvas.model';
-import { indexToRgb, mousePosToCanvasPos } from '../../utils/canvas.utils';
+import { mousePosToCanvasPos } from '../../utils/canvas.utils';
 
 @Component({
   selector: 'app-draw-canvas',
@@ -32,7 +32,7 @@ export class DrawCanvasComponent implements AfterViewInit, OnDestroy {
     this.canvasService.canvas$
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(canvas => {
-        const colorsRGB = canvas.content.map(index => indexToRgb(index));
+        const colorsRGB = canvas.content.map(index => canvas.palette[index]);
 
         const canvasHTMLElement: HTMLCanvasElement =
           this.canvasElement.nativeElement;
@@ -77,9 +77,13 @@ export class DrawCanvasComponent implements AfterViewInit, OnDestroy {
       Math.sqrt(
         Math.pow(this.mouseDownAt.x - $event.x, 2) +
           Math.pow(this.mouseDownAt.y - $event.y, 2)
-      ) < 1
+      ) < 5
     ) {
-      this.canvasService.updatePixel(this.cursorX, this.cursorY, 1);
+      this.canvasService.updatePixel(
+        this.cursorX,
+        this.cursorY,
+        this.canvasService.selectedColorIndex
+      );
     }
   }
 }

@@ -29,13 +29,15 @@ export class ScalableContainerComponent implements OnInit, OnDestroy {
     this.canvasService.canvas$
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(canvas => {
-        if (this.canvasWidth === 0) {
-          const center = getScreenCenter();
-          this.xPosition = center.x - canvas.width / 2;
-          this.yPosition = center.y - canvas.height / 2;
-        }
+        const wasZero = this.canvasWidth === 0;
         this.canvasWidth = canvas.width;
         this.canvasHeight = canvas.height;
+
+        if (wasZero) {
+          const center = getScreenCenter();
+          this.xPosition = center.x - this.canvasWidth / 2;
+          this.yPosition = center.y - this.canvasHeight / 2;
+        }
       });
   }
 

@@ -17,9 +17,15 @@ import { DrawCanvasComponent } from './components/draw-canvas/draw-canvas.compon
 import { ScalableContainerComponent } from './components/scalable-container/scalable-container.component';
 import { AngularFireModule } from '@angular/fire/compat';
 import { HttpClientModule } from '@angular/common/http';
+import { PaletteComponent } from './components/palette/palette.component';
 
 @NgModule({
-  declarations: [AppComponent, DrawCanvasComponent, ScalableContainerComponent],
+  declarations: [
+    AppComponent,
+    DrawCanvasComponent,
+    ScalableContainerComponent,
+    PaletteComponent,
+  ],
   imports: [
     BrowserModule,
     HttpClientModule,

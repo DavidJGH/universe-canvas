@@ -1,0 +1,24 @@
+.palette {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  margin: 20px 5px;
+  z-index: 100;
+
+  .color {
+    height: 40px;
+    width: 40px;
+    border: solid 5px #dcdcdc;
+    margin: 0 0 17px 17px;
+    border-radius: 17px;
+    cursor: pointer;
+
+    &.active {
+      border: solid 5px #61a4e8;
+    }
+  }
+}
