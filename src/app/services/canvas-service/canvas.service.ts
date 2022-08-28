@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
 import { BehaviorSubject } from 'rxjs';
-import { Canvas } from '../../models/canvas.model';
+import { Canvas, PartialCanvas } from '../../models/canvas.model';
 import { environment } from '../../../environments/environment';
 
 @Injectable({
@@ -35,6 +35,21 @@ export class CanvasService {
       .catch(err => console.log('Error while starting connection: ' + err));
     this.hubConnection.on('TransferCompleteCanvas', (data: Canvas) => {
       this.canvasBehaviorSubject.next(data);
+    });
+    this.hubConnection.on('TransferCanvasChanges', (data: PartialCanvas) => {
+      const canvas = this.canvasBehaviorSubject.value;
+      for (let pixelInfo of data.content) {
+        if (
+          pixelInfo.position.x >= canvas.width ||
+          pixelInfo.position.y >= canvas.height
+        ) {
+          continue;
+        }
+        canvas.content[
+          pixelInfo.position.y * canvas.width + pixelInfo.position.x
+        ] = pixelInfo.colorIndex;
+      }
+      this.canvasBehaviorSubject.next(canvas);
     });
   }
 
