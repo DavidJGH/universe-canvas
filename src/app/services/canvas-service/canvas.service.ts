@@ -15,9 +15,11 @@ export class CanvasService {
     palette: [],
   });
 
-  selectedColorIndex = 0;
+  private selectedColorIndexBehaviorSubject = new BehaviorSubject<number>(0);
 
   canvas$ = this.canvasBehaviorSubject.asObservable();
+
+  selectedColorIndex$ = this.selectedColorIndexBehaviorSubject.asObservable();
 
   private hubConnection: signalR.HubConnection | undefined;
 
@@ -55,5 +57,9 @@ export class CanvasService {
 
   updatePixel(x: number, y: number, c: number) {
     this.hubConnection?.send('SetPixel', x, y, c);
+  }
+
+  setColorIndex(index: number) {
+    this.selectedColorIndexBehaviorSubject.next(index);
   }
 }

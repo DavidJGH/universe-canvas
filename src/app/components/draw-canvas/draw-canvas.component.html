@@ -8,6 +8,8 @@
 
 <div
   id="cursor"
+  *ngIf="canvas"
+  [style.background-color]="canvas.palette[selectedColorIndex]"
   [ngStyle]="{
     display: displayCursor ? 'block' : 'none',
     top: cursorY + 'px',

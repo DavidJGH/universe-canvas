@@ -3,11 +3,12 @@ import {
   Component,
   ElementRef,
   OnDestroy,
+  OnInit,
   ViewChild,
 } from '@angular/core';
 import { CanvasService } from '../../services/canvas-service/canvas.service';
 import { Subject, takeUntil } from 'rxjs';
-import { Vector } from '../../models/canvas.model';
+import { Canvas, Vector } from '../../models/canvas.model';
 import { mousePosToCanvasPos } from '../../utils/canvas.utils';
 
 @Component({
@@ -15,8 +16,11 @@ import { mousePosToCanvasPos } from '../../utils/canvas.utils';
   templateUrl: './draw-canvas.component.html',
   styleUrls: ['./draw-canvas.component.scss'],
 })
-export class DrawCanvasComponent implements AfterViewInit, OnDestroy {
+export class DrawCanvasComponent implements OnInit, AfterViewInit, OnDestroy {
   private unsubscribe$: Subject<void> = new Subject();
+
+  canvas: Canvas | undefined;
+  selectedColorIndex = 0;
 
   @ViewChild('drawCanvas') canvasElement!: ElementRef;
 
@@ -28,10 +32,17 @@ export class DrawCanvasComponent implements AfterViewInit, OnDestroy {
 
   constructor(private readonly canvasService: CanvasService) {}
 
+  ngOnInit() {
+    this.canvasService.selectedColorIndex$
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(colorIndex => (this.selectedColorIndex = colorIndex));
+  }
+
   ngAfterViewInit(): void {
     this.canvasService.canvas$
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(canvas => {
+        this.canvas = canvas;
         const colorsRGB = canvas.content.map(index => canvas.palette[index]);
 
         const canvasHTMLElement: HTMLCanvasElement =
@@ -54,11 +65,6 @@ export class DrawCanvasComponent implements AfterViewInit, OnDestroy {
       });
   }
 
-  ngOnDestroy() {
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
-  }
-
   cursorMove($event: MouseEvent) {
     const canvasPos = mousePosToCanvasPos(
       this.canvasElement.nativeElement,
@@ -79,11 +85,24 @@ export class DrawCanvasComponent implements AfterViewInit, OnDestroy {
           Math.pow(this.mouseDownAt.y - $event.y, 2)
       ) < 5
     ) {
+      const canvasHTMLElement: HTMLCanvasElement =
+        this.canvasElement.nativeElement;
+      const context = canvasHTMLElement.getContext('2d');
+      if (context) {
+        context.fillStyle =
+          this.canvas?.palette[this.selectedColorIndex] ?? '#FFFFFF';
+        context.fillRect(this.cursorX, this.cursorY, 1, 1);
+      }
       this.canvasService.updatePixel(
         this.cursorX,
         this.cursorY,
-        this.canvasService.selectedColorIndex
+        this.selectedColorIndex
       );
     }
+  }
+
+  ngOnDestroy() {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 }
