@@ -41,25 +41,30 @@ export class DrawCanvasComponent implements OnInit, AfterViewInit, OnDestroy {
   ngAfterViewInit(): void {
     this.canvasService.canvas$
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(canvas => {
+      .subscribe(({ canvas, changes }) => {
         this.canvas = canvas;
-        const colorsRGB = canvas.content.map(index => canvas.palette[index]);
 
         const canvasHTMLElement: HTMLCanvasElement =
           this.canvasElement.nativeElement;
 
-        canvasHTMLElement.width = canvas.width;
-        canvasHTMLElement.height = canvas.height;
+        if (
+          canvasHTMLElement.width !== canvas.width ||
+          canvasHTMLElement.height !== canvas.height
+        ) {
+          canvasHTMLElement.width = canvas.width;
+          canvasHTMLElement.height = canvas.height;
+        }
         const context = canvasHTMLElement.getContext('2d');
         if (context) {
-          for (let i = 0; i < canvas.width; i++) {
-            for (let j = 0; j < canvas.height; j++) {
-              if (colorsRGB.length <= i + j * canvas.width) {
-                return;
-              }
-              context.fillStyle = colorsRGB[i + j * canvas.width];
-              context.fillRect(i, j, 1, 1);
+          for (let pixelInfo of changes.content) {
+            if (
+              pixelInfo.position.x >= this.canvas.width ||
+              pixelInfo.position.y >= this.canvas.height
+            ) {
+              continue;
             }
+            context.fillStyle = this.canvas.palette[pixelInfo.colorIndex];
+            context.fillRect(pixelInfo.position.x, pixelInfo.position.y, 1, 1);
           }
         }
       });

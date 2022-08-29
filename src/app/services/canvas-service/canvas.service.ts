@@ -3,16 +3,25 @@ import * as signalR from '@microsoft/signalr';
 import { BehaviorSubject } from 'rxjs';
 import { Canvas, PartialCanvas } from '../../models/canvas.model';
 import { environment } from '../../../environments/environment';
+import { canvasToPartialCanvas } from '../../utils/canvas.utils';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CanvasService {
-  private canvasBehaviorSubject = new BehaviorSubject<Canvas>({
-    width: 0,
-    height: 0,
-    content: [],
-    palette: [],
+  private canvasBehaviorSubject = new BehaviorSubject<{
+    canvas: Canvas;
+    changes: PartialCanvas;
+  }>({
+    canvas: {
+      width: 0,
+      height: 0,
+      content: [],
+      palette: [],
+    },
+    changes: {
+      content: [],
+    },
   });
 
   private selectedColorIndexBehaviorSubject = new BehaviorSubject<number>(0);
@@ -31,15 +40,33 @@ export class CanvasService {
       .start()
       .then(() => {
         this.hubConnection?.invoke('GetCanvas').then((data: Canvas) => {
-          this.canvasBehaviorSubject.next(data);
+          this.canvasBehaviorSubject.next({
+            canvas: data,
+            changes: canvasToPartialCanvas(data),
+          });
         });
       })
       .catch(err => console.log('Error while starting connection: ' + err));
     this.hubConnection.on('TransferCompleteCanvas', (data: Canvas) => {
-      this.canvasBehaviorSubject.next(data);
+      const currentCanvas = this.canvasBehaviorSubject.value;
+      if (
+        currentCanvas.canvas.width !== data.width ||
+        currentCanvas.canvas.height !== data.height ||
+        currentCanvas.canvas.palette !== data.palette
+      ) {
+        this.canvasBehaviorSubject.next({
+          canvas: data,
+          changes: canvasToPartialCanvas(data),
+        });
+      } else {
+        this.canvasBehaviorSubject.next({
+          canvas: data,
+          changes: { content: [] },
+        });
+      }
     });
     this.hubConnection.on('TransferCanvasChanges', (data: PartialCanvas) => {
-      const canvas = this.canvasBehaviorSubject.value;
+      const canvas = this.canvasBehaviorSubject.value.canvas;
       for (let pixelInfo of data.content) {
         if (
           pixelInfo.position.x >= canvas.width ||
@@ -51,7 +78,10 @@ export class CanvasService {
           pixelInfo.position.y * canvas.width + pixelInfo.position.x
         ] = pixelInfo.colorIndex;
       }
-      this.canvasBehaviorSubject.next(canvas);
+      this.canvasBehaviorSubject.next({
+        canvas,
+        changes: data,
+      });
     });
   }
 

@@ -1,4 +1,4 @@
-import { Vector } from '../models/canvas.model';
+import { Canvas, PartialCanvas, Vector } from '../models/canvas.model';
 
 export function mousePosToCanvasPos(
   canvas: HTMLCanvasElement,
@@ -12,5 +12,17 @@ export function mousePosToCanvasPos(
     y: Math.floor(
       ((evt.clientY - rect.top) / (rect.bottom - rect.top)) * canvas.height
     ),
+  };
+}
+
+export function canvasToPartialCanvas(canvas: Canvas): PartialCanvas {
+  return {
+    content: canvas.content.map((value, index) => ({
+      colorIndex: value,
+      position: {
+        x: index % canvas.width,
+        y: Math.floor(index / canvas.width),
+      },
+    })),
   };
 }

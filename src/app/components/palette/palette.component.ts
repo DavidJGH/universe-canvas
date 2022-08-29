@@ -10,7 +10,9 @@ import { map, Subject, takeUntil } from 'rxjs';
 export class PaletteComponent implements OnInit, OnDestroy {
   private unsubscribe$: Subject<void> = new Subject();
 
-  palette$ = this.canvasService.canvas$.pipe(map(canvas => canvas.palette));
+  palette$ = this.canvasService.canvas$.pipe(
+    map(({ canvas }) => canvas.palette)
+  );
   selectedColorIndex = 0;
 
   constructor(private readonly canvasService: CanvasService) {}

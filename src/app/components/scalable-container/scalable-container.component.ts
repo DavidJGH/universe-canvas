@@ -28,7 +28,7 @@ export class ScalableContainerComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.canvasService.canvas$
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(canvas => {
+      .subscribe(({ canvas }) => {
         const wasZero = this.canvasWidth === 0;
         this.canvasWidth = canvas.width;
         this.canvasHeight = canvas.height;
