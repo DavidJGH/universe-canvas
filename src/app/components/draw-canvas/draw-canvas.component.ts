@@ -9,7 +9,10 @@ import {
 import { CanvasService } from '../../services/canvas-service/canvas.service';
 import { Subject, takeUntil } from 'rxjs';
 import { Canvas, Vector } from '../../models/canvas.model';
-import { mousePosToCanvasPos } from '../../utils/canvas.utils';
+import {
+  getLineBetweenPoints,
+  mousePosToCanvasPos,
+} from '../../utils/canvas.utils';
 
 @Component({
   selector: 'app-draw-canvas',
@@ -23,12 +26,15 @@ export class DrawCanvasComponent implements OnInit, AfterViewInit, OnDestroy {
   selectedColorIndex = 0;
 
   @ViewChild('drawCanvas') canvasElement!: ElementRef;
+  private canvasHTMLElement: HTMLCanvasElement | undefined;
+  private canvasContext: CanvasRenderingContext2D | undefined = undefined;
 
   displayCursor = false;
   cursorX = 0;
   cursorY = 0;
 
-  mouseDownAt: Vector = { x: 0, y: 0 };
+  private drawing = false;
+  private currentDrawPixels: Vector[] = [];
 
   constructor(private readonly canvasService: CanvasService) {}
 
@@ -39,23 +45,22 @@ export class DrawCanvasComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
+    this.canvasHTMLElement = this.canvasElement.nativeElement;
+    this.canvasContext = this.canvasHTMLElement?.getContext('2d') ?? undefined;
     this.canvasService.canvas$
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(({ canvas, changes }) => {
         this.canvas = canvas;
 
-        const canvasHTMLElement: HTMLCanvasElement =
-          this.canvasElement.nativeElement;
-
         if (
-          canvasHTMLElement.width !== canvas.width ||
-          canvasHTMLElement.height !== canvas.height
+          this.canvasHTMLElement &&
+          (this.canvasHTMLElement.width !== canvas.width ||
+            this.canvasHTMLElement.height !== canvas.height)
         ) {
-          canvasHTMLElement.width = canvas.width;
-          canvasHTMLElement.height = canvas.height;
+          this.canvasHTMLElement.width = canvas.width;
+          this.canvasHTMLElement.height = canvas.height;
         }
-        const context = canvasHTMLElement.getContext('2d');
-        if (context) {
+        if (this.canvasContext) {
           for (let pixelInfo of changes.content) {
             if (
               pixelInfo.position.x >= this.canvas.width ||
@@ -63,51 +68,79 @@ export class DrawCanvasComponent implements OnInit, AfterViewInit, OnDestroy {
             ) {
               continue;
             }
-            context.fillStyle = this.canvas.palette[pixelInfo.colorIndex];
-            context.fillRect(pixelInfo.position.x, pixelInfo.position.y, 1, 1);
+            this.canvasContext.fillStyle =
+              this.canvas.palette[pixelInfo.colorIndex];
+            this.canvasContext.fillRect(
+              pixelInfo.position.x,
+              pixelInfo.position.y,
+              1,
+              1
+            );
           }
         }
       });
   }
 
-  cursorMove($event: MouseEvent) {
+  mouseAction($event: MouseEvent) {
     const canvasPos = mousePosToCanvasPos(
       this.canvasElement.nativeElement,
       $event
     );
     this.cursorX = canvasPos.x;
     this.cursorY = canvasPos.y;
-  }
-
-  mouseDown($event: MouseEvent) {
-    this.mouseDownAt = { x: $event.x, y: $event.y };
-  }
-
-  mouseUp($event: MouseEvent) {
+    if ($event.buttons == 1) {
+      this.drawing = true;
+    } else {
+      this.drawing = false;
+      this.currentDrawPixels = [];
+    }
     if (
-      Math.sqrt(
-        Math.pow(this.mouseDownAt.x - $event.x, 2) +
-          Math.pow(this.mouseDownAt.y - $event.y, 2)
-      ) < 5
+      this.drawing &&
+      !this.currentDrawPixels.some(
+        pixel => pixel.x == this.cursorX && pixel.y == this.cursorY
+      )
     ) {
-      const canvasHTMLElement: HTMLCanvasElement =
-        this.canvasElement.nativeElement;
-      const context = canvasHTMLElement.getContext('2d');
-      if (context) {
-        context.fillStyle =
-          this.canvas?.palette[this.selectedColorIndex] ?? '#FFFFFF';
-        context.fillRect(this.cursorX, this.cursorY, 1, 1);
+      const currentPixel: Vector = { x: this.cursorX, y: this.cursorY };
+      const lastPixel =
+        this.currentDrawPixels[this.currentDrawPixels.length - 1];
+      if (
+        lastPixel &&
+        (Math.abs(currentPixel.x - lastPixel.x) > 1 ||
+          Math.abs(currentPixel.y - lastPixel.y) > 1)
+      ) {
+        const positions = getLineBetweenPoints(lastPixel, currentPixel);
+        for (let position of positions) {
+          this.drawPixel(position);
+        }
+      } else {
+        this.drawPixel(currentPixel);
       }
-      this.canvasService.updatePixel(
-        this.cursorX,
-        this.cursorY,
-        this.selectedColorIndex
-      );
     }
   }
 
   ngOnDestroy() {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
+  }
+
+  private drawPixel(position: Vector) {
+    if (
+      this.currentDrawPixels.some(
+        pixel => pixel.x == this.cursorX && pixel.y == this.cursorY
+      )
+    ) {
+      return;
+    }
+    if (this.canvasContext) {
+      this.canvasContext.fillStyle =
+        this.canvas?.palette[this.selectedColorIndex] ?? '#FFFFFF';
+      this.canvasContext.fillRect(position.x, position.y, 1, 1);
+    }
+    this.canvasService.updatePixel(
+      position.x,
+      position.y,
+      this.selectedColorIndex
+    );
+    this.currentDrawPixels.push(position);
   }
 }

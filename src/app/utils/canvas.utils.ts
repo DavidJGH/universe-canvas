@@ -26,3 +26,40 @@ export function canvasToPartialCanvas(canvas: Canvas): PartialCanvas {
     })),
   };
 }
+
+export function getLineBetweenPoints(
+  position1: Vector,
+  position2: Vector,
+  includeStartPos: boolean = false
+): Vector[] {
+  const coordinatesArray: Vector[] = [];
+
+  let x1 = position1.x;
+  let y1 = position1.y;
+  const x2 = position2.x;
+  const y2 = position2.y;
+
+  const dx = Math.abs(x2 - x1);
+  const dy = Math.abs(y2 - y1);
+  const sx = x1 < x2 ? 1 : -1;
+  const sy = y1 < y2 ? 1 : -1;
+  let err = dx - dy;
+
+  if (includeStartPos) {
+    coordinatesArray.push({ x: x1, y: y1 });
+  }
+
+  while (!(x1 == x2 && y1 == y2)) {
+    const e2 = err << 1;
+    if (e2 > -dy) {
+      err -= dy;
+      x1 += sx;
+    }
+    if (e2 < dx) {
+      err += dx;
+      y1 += sy;
+    }
+    coordinatesArray.push({ x: x1, y: y1 });
+  }
+  return coordinatesArray;
+}

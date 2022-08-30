@@ -67,12 +67,17 @@ export class ScalableContainerComponent implements OnInit, OnDestroy {
 
   @HostListener('mousemove', ['$event'])
   move($event: MouseEvent) {
-    if ($event.buttons == 1) {
+    if ($event.buttons == 4 || $event.buttons == 2) {
       this.setPosition(
         this.xPosition + $event.movementX,
         this.yPosition + $event.movementY
       );
     }
+  }
+
+  @HostListener('contextmenu', ['$event'])
+  onRightClick($event: MouseEvent) {
+    $event.preventDefault();
   }
 
   ngOnDestroy() {

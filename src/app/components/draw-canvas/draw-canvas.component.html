@@ -2,9 +2,8 @@
   #drawCanvas
   (mouseenter)="displayCursor = true"
   (mouseleave)="displayCursor = false"
-  (mousemove)="cursorMove($event)"
-  (mousedown)="mouseDown($event)"
-  (mouseup)="mouseUp($event)"></canvas>
+  (mousemove)="mouseAction($event)"
+  (mousedown)="mouseAction($event)"></canvas>
 
 <div
   id="cursor"
