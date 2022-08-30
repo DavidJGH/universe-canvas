@@ -48,22 +48,10 @@ export class CanvasService {
       })
       .catch(err => console.log('Error while starting connection: ' + err));
     this.hubConnection.on('TransferCompleteCanvas', (data: Canvas) => {
-      const currentCanvas = this.canvasBehaviorSubject.value;
-      if (
-        currentCanvas.canvas.width !== data.width ||
-        currentCanvas.canvas.height !== data.height ||
-        currentCanvas.canvas.palette !== data.palette
-      ) {
-        this.canvasBehaviorSubject.next({
-          canvas: data,
-          changes: canvasToPartialCanvas(data),
-        });
-      } else {
-        this.canvasBehaviorSubject.next({
-          canvas: data,
-          changes: { content: [] },
-        });
-      }
+      this.canvasBehaviorSubject.next({
+        canvas: data,
+        changes: canvasToPartialCanvas(data),
+      });
     });
     this.hubConnection.on('TransferCanvasChanges', (data: PartialCanvas) => {
       const canvas = this.canvasBehaviorSubject.value.canvas;
