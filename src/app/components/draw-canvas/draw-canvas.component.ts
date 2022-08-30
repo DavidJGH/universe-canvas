@@ -35,6 +35,7 @@ export class DrawCanvasComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private drawing = false;
   private currentDrawPixels: Vector[] = [];
+  private previousMousePos: Vector | undefined = undefined;
 
   constructor(private readonly canvasService: CanvasService) {}
 
@@ -100,22 +101,28 @@ export class DrawCanvasComponent implements OnInit, AfterViewInit, OnDestroy {
         pixel => pixel.x == this.cursorX && pixel.y == this.cursorY
       )
     ) {
-      const currentPixel: Vector = { x: this.cursorX, y: this.cursorY };
-      const lastPixel =
-        this.currentDrawPixels[this.currentDrawPixels.length - 1];
       if (
-        lastPixel &&
-        (Math.abs(currentPixel.x - lastPixel.x) > 1 ||
-          Math.abs(currentPixel.y - lastPixel.y) > 1)
+        this.previousMousePos &&
+        (Math.abs(canvasPos.x - this.previousMousePos.x) > 1 ||
+          Math.abs(canvasPos.y - this.previousMousePos.y) > 1)
       ) {
-        const positions = getLineBetweenPoints(lastPixel, currentPixel);
+        const positions = getLineBetweenPoints(
+          this.previousMousePos,
+          canvasPos
+        );
         for (let position of positions) {
           this.drawPixel(position);
         }
       } else {
-        this.drawPixel(currentPixel);
+        this.drawPixel(canvasPos);
       }
     }
+    this.previousMousePos = canvasPos;
+  }
+
+  mouseOut($event: MouseEvent) {
+    this.mouseAction($event);
+    this.previousMousePos = undefined;
   }
 
   ngOnDestroy() {

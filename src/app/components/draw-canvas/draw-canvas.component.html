@@ -2,6 +2,7 @@
   #drawCanvas
   (mouseenter)="displayCursor = true"
   (mouseleave)="displayCursor = false"
+  (mouseout)="mouseOut($event)"
   (mousemove)="mouseAction($event)"
   (mousedown)="mouseAction($event)"></canvas>
 
