@@ -1,3 +1,12 @@
 body {
   background: #192536;
 }
+
+@font-face {
+    font-family: "Roboto";
+    src: local("Roboto"), url(./assets/fonts/Roboto/Roboto-Regular.ttf) format("truetype");
+}
+
+* {
+  font-family: Roboto, sans-serif;
+}

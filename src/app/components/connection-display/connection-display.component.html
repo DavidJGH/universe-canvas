@@ -1,0 +1,5 @@
+<div
+  *ngIf="connectionStatus$ | async as connectionStatus"
+  [ngClass]="connectionStatus">
+  {{ statusToText(connectionStatus) }}
+</div>

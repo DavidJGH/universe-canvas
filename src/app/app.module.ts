@@ -18,6 +18,7 @@ import { ScalableContainerComponent } from './components/scalable-container/scal
 import { AngularFireModule } from '@angular/fire/compat';
 import { HttpClientModule } from '@angular/common/http';
 import { PaletteComponent } from './components/palette/palette.component';
+import { ConnectionDisplayComponent } from './components/connection-display/connection-display.component';
 
 @NgModule({
   declarations: [
@@ -25,6 +26,7 @@ import { PaletteComponent } from './components/palette/palette.component';
     DrawCanvasComponent,
     ScalableContainerComponent,
     PaletteComponent,
+    ConnectionDisplayComponent,
   ],
   imports: [
     BrowserModule,

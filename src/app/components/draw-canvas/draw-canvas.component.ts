@@ -138,6 +138,14 @@ export class DrawCanvasComponent implements OnInit, AfterViewInit, OnDestroy {
     ) {
       return;
     }
+    if (
+      position.x < 0 ||
+      position.x >= this.canvas!.width ||
+      position.y < 0 ||
+      position.y >= this.canvas!.height
+    ) {
+      return;
+    }
     if (this.canvasContext) {
       this.canvasContext.fillStyle =
         this.canvas?.palette[this.selectedColorIndex] ?? '#FFFFFF';

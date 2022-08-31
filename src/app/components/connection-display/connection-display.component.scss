@@ -1,0 +1,29 @@
+:host {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+div {
+  padding: 10px 13px;
+  border-radius: 0 0 0 8px;
+}
+
+.connecting,
+.reconnecting {
+  background-color: #61a4e8;
+  box-shadow: 0 0 10px #61a4e870;
+}
+
+.connected {
+  background-color: #61e863;
+  box-shadow: 0 0 10px #61e86370;
+  filter: opacity(0);
+  transition: filter 0.5s;
+  transition-delay: 3s;
+}
+
+.connectionLost {
+  background-color: #e86161;
+  box-shadow: 0 0 10px #e8616170;
+}
