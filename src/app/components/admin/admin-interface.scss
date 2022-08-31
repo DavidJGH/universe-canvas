@@ -1,0 +1,95 @@
+:host {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.panel {
+  background-color: #313f56;
+  color: #f4f4f4;
+  margin: 10px;
+  padding: 20px;
+  border-radius: 10px;
+  align-content: center;
+  text-align: center;
+
+  max-width: 700px;
+  width: calc(100% - 100px);
+  height: 200px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  div {
+    margin-bottom: 3px;
+  }
+
+  .title {
+    font-size: 21px;
+  }
+
+  input {
+    width: 75px;
+    height: 20px;
+    font-size: 16px;
+    padding: 3px;
+
+    border: solid 2px #deebfa;
+    background-color: #deebfa;
+
+    border-radius: 5px;
+
+    &.ng-touched.ng-invalid {
+      border: solid 2px #9d3c3c;
+    }
+
+    &:focus {
+      outline: none;
+      border: solid 2px #476f93;
+    }
+
+    &[type='number'] {
+      text-align: right;
+      -moz-appearance: textfield;
+    }
+
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+  }
+
+  button {
+    margin-top: 10px;
+    height: 30px;
+    width: 80px;
+    border-radius: 10px;
+    background-color: #223146;
+    border: none;
+    color: #f4f4f4;
+    font-size: 14px;
+    cursor: pointer;
+
+    &:hover {
+      background-color: #25364d;
+    }
+
+    &:active {
+      background-color: #283a54;
+    }
+
+    &:disabled {
+      cursor: default;
+      background-color: #2b354f;
+    }
+  }
+}

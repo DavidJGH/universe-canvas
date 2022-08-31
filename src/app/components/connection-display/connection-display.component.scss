@@ -18,8 +18,8 @@ div {
 .connected {
   background-color: #61e863;
   box-shadow: 0 0 10px #61e86370;
-  filter: opacity(0);
-  transition: filter 0.5s;
+  opacity: 0;
+  transition: opacity 0.5s;
   transition-delay: 3s;
 }
 

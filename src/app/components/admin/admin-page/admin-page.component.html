@@ -1,0 +1,4 @@
+<app-admin-configuration *ngIf="authenticated"></app-admin-configuration>
+<app-admin-login
+  (authenticated)="handleAuthenticated($event)"
+  *ngIf="!authenticated"></app-admin-login>

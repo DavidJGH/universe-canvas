@@ -1,0 +1,20 @@
+.colorContainer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+
+  .colorSwatch {
+    margin: 5px;
+    border: solid 2px #dcdcdc;
+    border-radius: 5px;
+
+    height: 20px;
+    width: 20px;
+
+    transition: transform 0.1s;
+
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
+}

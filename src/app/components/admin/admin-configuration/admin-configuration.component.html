@@ -1,0 +1,33 @@
+<ng-container *ngIf="canvasData$ | async as canvasData">
+  <div class="panel">
+    <div>
+      <div class="title">Canvas Size</div>
+      <div>current:</div>
+      <div>
+        <div>{{ canvasData.width }} x {{ canvasData.height }}</div>
+      </div>
+    </div>
+    <div>
+      <div>
+        <div>set new size:</div>
+      </div>
+      <div>
+        <input type="number" [placeholder]="canvasData.width" /> x
+        <input type="number" [placeholder]="canvasData.height" />
+      </div>
+      <button>Submit</button>
+    </div>
+  </div>
+  <div class="panel">
+    <div>
+      <div class="title">Canvas Palette</div>
+      <div>current:</div>
+      <div class="colorContainer">
+        <div
+          class="colorSwatch"
+          *ngFor="let color of canvasData.palette"
+          [style.background-color]="color"></div>
+      </div>
+    </div>
+  </div>
+</ng-container>

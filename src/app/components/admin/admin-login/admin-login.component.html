@@ -1,0 +1,29 @@
+<div class="panel">
+  <div>
+    <div class="title">Admin Login</div>
+  </div>
+  <form [formGroup]="loginForm" (ngSubmit)="login()">
+    <div class="loginContainer">
+      <div>Username:</div>
+      <div>
+        <input
+          formControlName="username"
+          placeholder="username"
+          required="true" />
+      </div>
+      <br />
+      <div>Password:</div>
+      <div>
+        <input
+          formControlName="password"
+          type="password"
+          placeholder="password"
+          required="true" />
+      </div>
+    </div>
+    <div class="errorContainer" [style.opacity]="showError ? 1 : 0">
+      Invalid User
+    </div>
+    <button type="submit">Login</button>
+  </form>
+</div>

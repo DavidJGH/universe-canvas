@@ -1,5 +1,6 @@
 import {
   AfterViewInit,
+  ChangeDetectionStrategy,
   Component,
   ElementRef,
   OnDestroy,
@@ -18,6 +19,7 @@ import {
   selector: 'app-draw-canvas',
   templateUrl: './draw-canvas.component.html',
   styleUrls: ['./draw-canvas.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DrawCanvasComponent implements OnInit, AfterViewInit, OnDestroy {
   private unsubscribe$: Subject<void> = new Subject();

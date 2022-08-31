@@ -1,0 +1,17 @@
+.panel {
+  width: 450px;
+  height: auto;
+
+  .loginContainer {
+    margin: 15px 60px;
+    text-align: left;
+
+    input {
+      width: 250px;
+    }
+  }
+
+  .errorContainer {
+    color: #d54c4c;
+  }
+}
