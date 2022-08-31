@@ -117,7 +117,11 @@ export class DrawCanvasComponent implements OnInit, AfterViewInit, OnDestroy {
         this.drawPixel(canvasPos);
       }
     }
-    this.previousMousePos = canvasPos;
+    if ($event.buttons == 1) {
+      this.previousMousePos = canvasPos;
+    } else {
+      this.previousMousePos = undefined;
+    }
   }
 
   mouseOut($event: MouseEvent) {
