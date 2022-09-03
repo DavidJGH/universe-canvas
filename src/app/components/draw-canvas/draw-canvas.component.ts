@@ -60,7 +60,9 @@ export class DrawCanvasComponent implements OnInit, AfterViewInit, OnDestroy {
 
         this.canvas = canvas;
 
-        const rgbPalette = canvas.palette.map(hexColor => hexToRgb(hexColor));
+        const rgbaPalette = canvas.palette
+          .map(hexColor => hexToRgb(hexColor))
+          .map(rgbObject => [rgbObject.r, rgbObject.g, rgbObject.b, 255]);
 
         if (
           this.canvasHTMLElement &&
@@ -84,13 +86,10 @@ export class DrawCanvasComponent implements OnInit, AfterViewInit, OnDestroy {
             ) {
               continue;
             }
-            const baseIndex =
-              (pixelInfo.position.x + pixelInfo.position.y * canvas.width) * 4;
-            const currentColor = rgbPalette[pixelInfo.colorIndex];
-            imgData.data[baseIndex] = currentColor.r;
-            imgData.data[baseIndex + 1] = currentColor.g;
-            imgData.data[baseIndex + 2] = currentColor.b;
-            imgData.data[baseIndex + 3] = 255;
+            imgData.data.set(
+              rgbaPalette[pixelInfo.colorIndex],
+              (pixelInfo.position.x + pixelInfo.position.y * canvas.width) * 4
+            );
           }
           this.canvasContext.putImageData(imgData, 0, 0);
         }
