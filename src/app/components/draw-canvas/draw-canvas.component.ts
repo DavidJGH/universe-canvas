@@ -12,6 +12,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { Canvas, Vector } from '../../models/canvas.model';
 import {
   getLineBetweenPoints,
+  hexToRgb,
   mousePosToCanvasPos,
 } from '../../utils/canvas.utils';
 
@@ -53,7 +54,13 @@ export class DrawCanvasComponent implements OnInit, AfterViewInit, OnDestroy {
     this.canvasService.canvas$
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(({ canvas, changes }) => {
+        if (canvas.width === 0 || canvas.height === 0) {
+          return;
+        }
+
         this.canvas = canvas;
+
+        const rgbPalette = canvas.palette.map(hexColor => hexToRgb(hexColor));
 
         if (
           this.canvasHTMLElement &&
@@ -64,6 +71,12 @@ export class DrawCanvasComponent implements OnInit, AfterViewInit, OnDestroy {
           this.canvasHTMLElement.height = canvas.height;
         }
         if (this.canvasContext) {
+          const imgData = this.canvasContext.getImageData(
+            0,
+            0,
+            canvas.width,
+            canvas.height
+          );
           for (let pixelInfo of changes.content) {
             if (
               pixelInfo.position.x >= this.canvas.width ||
@@ -71,15 +84,15 @@ export class DrawCanvasComponent implements OnInit, AfterViewInit, OnDestroy {
             ) {
               continue;
             }
-            this.canvasContext.fillStyle =
-              this.canvas.palette[pixelInfo.colorIndex];
-            this.canvasContext.fillRect(
-              pixelInfo.position.x,
-              pixelInfo.position.y,
-              1,
-              1
-            );
+            const baseIndex =
+              (pixelInfo.position.x + pixelInfo.position.y * canvas.width) * 4;
+            const currentColor = rgbPalette[pixelInfo.colorIndex];
+            imgData.data[baseIndex] = currentColor.r;
+            imgData.data[baseIndex + 1] = currentColor.g;
+            imgData.data[baseIndex + 2] = currentColor.b;
+            imgData.data[baseIndex + 3] = 255;
           }
+          this.canvasContext.putImageData(imgData, 0, 0);
         }
       });
   }
