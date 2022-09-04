@@ -5,9 +5,8 @@ import { Component } from '@angular/core';
   templateUrl: './admin-page.component.html',
 })
 export class AdminPageComponent {
-  authenticated = true;
-  token =
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoibWFyYmxlcyIsIm5iZiI6MTY2MjMxMTUxMSwiZXhwIjoxNjYyMzE1MTExLCJpYXQiOjE2NjIzMTE1MTF9.LieiT-6D-dFxuKDmwG0uMJdiJdUjPmiP9yy2Ii5NNCk';
+  authenticated = false;
+  token = '';
 
   handleAuthenticated(token: string) {
     this.authenticated = true;
