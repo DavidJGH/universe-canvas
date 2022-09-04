@@ -143,6 +143,10 @@ export class DrawCanvasComponent implements OnInit, AfterViewInit, OnDestroy {
     this.previousMousePos = undefined;
   }
 
+  mouseUp() {
+    this.currentDrawPixels = [];
+  }
+
   ngOnDestroy() {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
