@@ -11,6 +11,5 @@ export class AdminPageComponent {
   handleAuthenticated(token: string) {
     this.authenticated = true;
     this.token = token;
-    console.log(token);
   }
 }
