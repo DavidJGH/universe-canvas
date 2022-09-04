@@ -17,6 +17,7 @@ import { AdminPageComponent } from './components/admin/admin-page/admin-page.com
 import { AdminConfigurationComponent } from './components/admin/admin-configuration/admin-configuration.component';
 import { AdminLoginComponent } from './components/admin/admin-login/admin-login.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 @NgModule({
   declarations: [
@@ -35,6 +36,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     HttpClientModule,
     AppRoutingModule,
     ReactiveFormsModule,
+    DragDropModule,
     // AngularFireModule.initializeApp(environment.firebase),
     // provideFirebaseApp(() => initializeApp(environment.firebase)),
     // provideAnalytics(() => getAnalytics()),

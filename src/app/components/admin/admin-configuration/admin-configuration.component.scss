@@ -13,8 +13,37 @@
 
     transition: transform 0.1s;
 
-    &:hover {
-      transform: scale(1.1);
+    &.editable {
+      cursor: move;
+
+      &:hover {
+        transform: scale(1.1);
+      }
     }
+  }
+
+  &.cdk-drop-list-dragging {
+    .paletteButton {
+      border: solid 2px rgba(220, 220, 220, 0.2);
+      color: rgba(220, 220, 220, 0.2);
+    }
+  }
+
+  .paletteSpacer {
+    height: 30px;
+    width: 30px;
+  }
+
+  .paletteButton {
+    margin: 5px;
+    border: solid 2px rgba(220, 220, 220, 0.55);
+    color: rgba(220, 220, 220, 0.55);
+    border-radius: 5px;
+
+    height: 20px;
+    width: 20px;
+
+    cursor: pointer;
+    user-select: none;
   }
 }

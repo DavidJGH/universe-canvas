@@ -7,6 +7,7 @@
         <div>{{ canvasData.width }} x {{ canvasData.height }}</div>
       </div>
     </div>
+    <br />
     <div>
       <div>
         <div>set new size:</div>
@@ -27,7 +28,33 @@
           class="colorSwatch"
           *ngFor="let color of canvasData.palette"
           [style.background-color]="color"></div>
+        <div class="paletteSpacer"></div>
       </div>
+    </div>
+    <br />
+    <div>
+      <div>update palette:</div>
+      <div
+        class="colorContainer"
+        cdkDropList
+        cdkDropListOrientation="horizontal"
+        (cdkDropListDropped)="colorMoved($event)">
+        <div *ngFor="let colorInfo of currentPalette; index as i" cdkDrag>
+          <!--suppress HtmlUnknownBooleanAttribute -->
+          <div
+            *cdkDragPreview
+            class="colorSwatch"
+            [style.background-color]="colorInfo.color"></div>
+          <div
+            cdkDragHandle
+            class="colorSwatch editable"
+            [style.background-color]="colorInfo.color"></div>
+          <div class="paletteButton" (click)="removeColor(i)">x</div>
+        </div>
+        <div class="paletteButton">+</div>
+      </div>
+      <button (click)="resetPalette(canvasData.palette)">Reset</button>
+      <button>Submit</button>
     </div>
   </div>
 </ng-container>
