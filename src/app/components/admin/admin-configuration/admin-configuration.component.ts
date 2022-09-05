@@ -49,4 +49,8 @@ export class AdminConfigurationComponent {
     this.currentPalette.splice($event.previousIndex, 1);
     this.currentPalette.splice($event.currentIndex, 0, element);
   }
+
+  addColor(color: string) {
+    this.currentPalette.push({ originalIndex: -1, color });
+  }
 }

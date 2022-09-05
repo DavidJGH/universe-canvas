@@ -18,6 +18,7 @@ import { AdminConfigurationComponent } from './components/admin/admin-configurat
 import { AdminLoginComponent } from './components/admin/admin-login/admin-login.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { ColorPickerModule } from 'ngx-color-picker';
 
 @NgModule({
   declarations: [
@@ -37,6 +38,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     AppRoutingModule,
     ReactiveFormsModule,
     DragDropModule,
+    ColorPickerModule,
     // AngularFireModule.initializeApp(environment.firebase),
     // provideFirebaseApp(() => initializeApp(environment.firebase)),
     // provideAnalytics(() => getAnalytics()),
