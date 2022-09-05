@@ -48,7 +48,7 @@ export class AdminConfigurationComponent {
     private readonly canvasService: CanvasService,
     private readonly adminService: AdminService,
     private readonly changeDetector: ChangeDetectorRef,
-    private formBuilder: FormBuilder
+    private readonly formBuilder: FormBuilder
   ) {}
 
   removeColor(index: number) {

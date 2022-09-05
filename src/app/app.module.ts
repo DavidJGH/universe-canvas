@@ -19,6 +19,7 @@ import { AdminLoginComponent } from './components/admin/admin-login/admin-login.
 import { ReactiveFormsModule } from '@angular/forms';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { ColorPickerModule } from 'ngx-color-picker';
+import { CookieService } from 'ngx-cookie-service';
 
 @NgModule({
   declarations: [
@@ -46,7 +47,7 @@ import { ColorPickerModule } from 'ngx-color-picker';
     // provideFirestore(() => getFirestore()),
     // providePerformance(() => getPerformance()),
   ],
-  providers: [ScreenTrackingService, UserTrackingService],
+  providers: [ScreenTrackingService, UserTrackingService, CookieService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

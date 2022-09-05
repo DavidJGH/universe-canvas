@@ -20,7 +20,7 @@ export class AdminLoginComponent {
 
   constructor(
     private readonly adminService: AdminService,
-    private formBuilder: FormBuilder
+    private readonly formBuilder: FormBuilder
   ) {}
 
   login() {

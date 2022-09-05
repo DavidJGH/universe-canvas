@@ -40,10 +40,10 @@ export class AdminService {
         }
       )
       .pipe(
+        map(() => ({ success: true, error: '' })),
         catchError(err =>
           of({ success: false, error: err.error ?? err.statusText })
-        ),
-        map(result => ({ success: true, error: '', ...result }))
+        )
       );
   }
 
@@ -62,10 +62,21 @@ export class AdminService {
         }
       )
       .pipe(
+        map(() => ({ success: true, error: '' })),
         catchError(err =>
           of({ success: false, error: err.error ?? err.statusText })
-        ),
-        map(result => ({ success: true, error: '', ...result }))
+        )
+      );
+  }
+
+  isValidToken(token: string): Observable<boolean> {
+    return this.httpClient
+      .get(`${environment.backendBase}/api/User/isAuthenticated`, {
+        headers: { Authorization: 'Bearer ' + token },
+      })
+      .pipe(
+        map(() => true),
+        catchError(() => of(false))
       );
   }
 }

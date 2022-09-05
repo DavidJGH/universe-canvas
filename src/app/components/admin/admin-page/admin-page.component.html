@@ -1,6 +1,6 @@
 <app-admin-configuration
   [token]="token"
-  *ngIf="authenticated"></app-admin-configuration>
+  *ngIf="authenticated === 1"></app-admin-configuration>
 <app-admin-login
   (authenticated)="handleAuthenticated($event)"
-  *ngIf="!authenticated"></app-admin-login>
+  *ngIf="authenticated === 0"></app-admin-login>
