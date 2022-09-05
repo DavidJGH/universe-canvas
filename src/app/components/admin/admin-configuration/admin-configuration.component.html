@@ -8,16 +8,36 @@
       </div>
     </div>
     <br />
-    <div>
+    <form [formGroup]="resizeForm" (ngSubmit)="submitResize()">
       <div>
         <div>set new size:</div>
       </div>
-      <div>
-        <input type="number" [placeholder]="canvasData.width" /> x
-        <input type="number" [placeholder]="canvasData.height" />
+      <div class="input-container">
+        <input
+          formControlName="width"
+          type="number"
+          required
+          placeholder="width" />
+        x
+        <input
+          formControlName="height"
+          type="number"
+          required
+          placeholder="height" />
       </div>
-      <button>Submit</button>
-    </div>
+      <div class="checkbox-container">
+        <input
+          formControlName="allowSmaller"
+          type="checkbox"
+          id="allowSmaller"
+          name="allowSmaller" />
+        <label for="allowSmaller">allow smaller values</label>
+      </div>
+      <div class="error-container">
+        {{ sizeErrorMessage }}
+      </div>
+      <button type="submit">Submit</button>
+    </form>
   </div>
   <div class="panel">
     <div>
@@ -77,6 +97,9 @@
           +
         </div>
       </div>
+      <div class="error-container">
+        {{ paletteErrorMessage }}
+      </div>
       <button (click)="resetPalette(canvasData.palette, canvasData.startColor)">
         Reset
       </button>
@@ -86,7 +109,7 @@
 </ng-container>
 
 <ng-template #setStartColorTemplate>
-  <div class="extra-template-container">
+  <div class="checkbox-container">
     <input
       (change)="checkboxChanged($event)"
       type="checkbox"

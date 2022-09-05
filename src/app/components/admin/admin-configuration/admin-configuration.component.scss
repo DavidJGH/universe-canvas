@@ -53,7 +53,11 @@
   }
 }
 
-.extra-template-container {
+.panel .input-container {
+  margin-bottom: 5px;
+}
+
+.checkbox-container {
   display: flex;
   justify-content: center;
   align-items: center;

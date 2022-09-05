@@ -16,7 +16,7 @@ export class AdminService {
     password: string
   ): Observable<{ success: boolean; token?: string }> {
     return this.httpClient
-      .post<Tokens>(environment.backendBase + '/api/User/authenticate', {
+      .post<Tokens>(`${environment.backendBase}/api/User/authenticate`, {
         username,
         password,
       })
@@ -26,15 +26,46 @@ export class AdminService {
       );
   }
 
-  updatePalette(palette: ColorChangeInfo[], startColor: number, token: string) {
-    this.httpClient
+  updatePalette(
+    palette: ColorChangeInfo[],
+    startColor: number,
+    token: string
+  ): Observable<{ success: boolean; error: string }> {
+    return this.httpClient
       .post(
-        environment.backendBase + '/api/Canvas/updatePalette',
+        `${environment.backendBase}/api/Canvas/updatePalette`,
         { palette, startColor },
         {
           headers: { Authorization: 'Bearer ' + token },
         }
       )
-      .subscribe();
+      .pipe(
+        catchError(err =>
+          of({ success: false, error: err.error ?? err.statusText })
+        ),
+        map(result => ({ success: true, error: '', ...result }))
+      );
+  }
+
+  updateSize(
+    width: number,
+    height: number,
+    allowSmaller: boolean,
+    token: string
+  ): Observable<{ success: boolean; error: string }> {
+    return this.httpClient
+      .post(
+        `${environment.backendBase}/api/Canvas/setSize?width=${width}&height=${height}&forceSmaller=${allowSmaller}`,
+        {},
+        {
+          headers: { Authorization: 'Bearer ' + token },
+        }
+      )
+      .pipe(
+        catchError(err =>
+          of({ success: false, error: err.error ?? err.statusText })
+        ),
+        map(result => ({ success: true, error: '', ...result }))
+      );
   }
 }

@@ -4,6 +4,7 @@ import { Canvas, ColorChangeInfo } from '../../../models/canvas.model';
 import { CanvasService } from '../../../services/canvas-service/canvas.service';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { AdminService } from '../../../services/admin-service/admin.service';
+import { FormBuilder } from '@angular/forms';
 
 @Component({
   selector: 'app-admin-configuration',
@@ -25,6 +26,12 @@ export class AdminConfigurationComponent {
     })
   );
 
+  resizeForm = this.formBuilder.group({
+    width: undefined,
+    height: undefined,
+    allowSmaller: false,
+  });
+
   currentPalette: ColorChangeInfo[] = [];
   currentStartColor = -1;
 
@@ -34,10 +41,14 @@ export class AdminConfigurationComponent {
   @Input()
   token!: string;
 
+  sizeErrorMessage = '';
+  paletteErrorMessage = '';
+
   constructor(
     private readonly canvasService: CanvasService,
     private readonly adminService: AdminService,
-    private readonly changeDetector: ChangeDetectorRef
+    private readonly changeDetector: ChangeDetectorRef,
+    private formBuilder: FormBuilder
   ) {}
 
   removeColor(index: number) {
@@ -83,11 +94,29 @@ export class AdminConfigurationComponent {
   }
 
   submitPalette() {
-    this.adminService.updatePalette(
-      this.currentPalette,
-      this.currentStartColor,
-      this.token
-    );
+    this.adminService
+      .updatePalette(this.currentPalette, this.currentStartColor, this.token)
+      .subscribe(result => {
+        console.log(result);
+        return (this.paletteErrorMessage = result.error);
+      });
+  }
+
+  submitResize() {
+    if (this.resizeForm.invalid) {
+      this.sizeErrorMessage = 'Incomplete values';
+      return;
+    }
+
+    const value = this.resizeForm.value;
+    this.adminService
+      .updateSize(
+        value.width! as number,
+        value.height! as number,
+        value.allowSmaller!,
+        this.token
+      )
+      .subscribe(result => (this.sizeErrorMessage = result.error));
   }
 
   openPicker(index: number) {

@@ -6,10 +6,7 @@
     <div class="loginContainer">
       <div>Username:</div>
       <div>
-        <input
-          formControlName="username"
-          placeholder="username"
-          required="true" />
+        <input formControlName="username" placeholder="username" required />
       </div>
       <br />
       <div>Password:</div>
@@ -18,10 +15,10 @@
           formControlName="password"
           type="password"
           placeholder="password"
-          required="true" />
+          required />
       </div>
     </div>
-    <div class="errorContainer" [style.opacity]="showError ? 1 : 0">
+    <div class="error-container" [style.opacity]="showError ? 1 : 0">
       Invalid User
     </div>
     <button type="submit">Login</button>

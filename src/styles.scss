@@ -46,6 +46,18 @@ color-picker .color-picker {
     border-color: rgba(0, 0, 0, 0) #3c4c67 rgba(0, 0, 0, 0) rgba(0, 0, 0, 0);
   }
 
+  .arrow.arrow-top-left {
+    border-color: rgba(0,0,0,0) rgba(0,0,0,0) rgba(0,0,0,0) #3c4c67;
+  }
+
+  .arrow.arrow-top {
+    border-color: #3c4c67 rgba(0,0,0,0) rgba(0,0,0,0) rgba(0,0,0,0);
+  }
+
+  .arrow.arrow-bottom {
+    border-color: rgba(0,0,0,0) rgba(0,0,0,0) #3c4c67 rgba(0,0,0,0);
+  }
+
   .button-area {
     text-align: center;
 
