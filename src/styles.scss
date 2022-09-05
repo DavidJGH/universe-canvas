@@ -48,6 +48,16 @@ color-picker .color-picker {
 
   .button-area {
     text-align: center;
+
+    .extra-space {
+      margin-top: 35px;
+      transform: translate(0, -5px);
+    }
+  }
+
+  .extra-template {
+    transform: translate(0, -85px);
+    margin-bottom: -34px;
   }
 }
 

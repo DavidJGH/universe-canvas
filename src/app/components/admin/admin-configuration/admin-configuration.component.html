@@ -26,7 +26,8 @@
       <div class="colorContainer">
         <div
           class="colorSwatch"
-          *ngFor="let color of canvasData.palette"
+          *ngFor="let color of canvasData.palette; index as i"
+          [class.start-color]="i === canvasData.startColor"
           [style.background-color]="color"></div>
         <div class="paletteSpacer"></div>
       </div>
@@ -46,8 +47,20 @@
             class="colorSwatch"
             [style.background-color]="colorInfo.color"></div>
           <div
+            [colorPicker]="colorInfo.color"
+            (colorPickerSelect)="updateColor(i, $event)"
+            (colorPickerOpen)="openPicker(i)"
+            [cpOKButton]="true"
+            [cpCancelButton]="true"
+            cpOKButtonText="Update Color"
+            cpAlphaChannel="disabled"
+            cpOutputFormat="hex"
+            cpOKButtonClass="extra-space"
+            cpCancelButtonClass="extra-space"
             cdkDragHandle
+            [cpExtraTemplate]="setStartColorTemplate"
             class="colorSwatch editable"
+            [class.start-color]="i === currentStartColor"
             [style.background-color]="colorInfo.color"></div>
           <div class="paletteButton" (click)="removeColor(i)">x</div>
         </div>
@@ -56,6 +69,7 @@
           colorPicker="#ffffff"
           (colorPickerSelect)="addColor($event)"
           [cpOKButton]="true"
+          [cpCancelButton]="true"
           cpOKButtonText="Add Color"
           cpAlphaChannel="disabled"
           cpOutputFormat="hex"
@@ -63,8 +77,23 @@
           +
         </div>
       </div>
-      <button (click)="resetPalette(canvasData.palette)">Reset</button>
-      <button>Submit</button>
+      <button (click)="resetPalette(canvasData.palette, canvasData.startColor)">
+        Reset
+      </button>
+      <button (click)="submitPalette()">Submit</button>
     </div>
   </div>
 </ng-container>
+
+<ng-template #setStartColorTemplate>
+  <div class="extra-template-container">
+    <input
+      (change)="checkboxChanged($event)"
+      type="checkbox"
+      id="backgroundCheck"
+      name="backgroundCheck"
+      [checked]="currentlyOpenIsStartColor"
+      [disabled]="currentlyOpenIsStartColor" />
+    <label for="backgroundCheck">is background color</label>
+  </div>
+</ng-template>

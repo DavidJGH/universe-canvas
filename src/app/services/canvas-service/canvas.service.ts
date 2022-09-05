@@ -19,6 +19,7 @@ export class CanvasService {
       height: 0,
       content: [],
       palette: [],
+      startColor: -1,
     },
     changes: {
       content: [],

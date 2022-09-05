@@ -13,6 +13,11 @@
 
     transition: transform 0.1s;
 
+    &.start-color {
+      border: solid 2px #61a4e8;
+      box-shadow: 0 0 4px #61a4e850
+    }
+
     &.editable {
       cursor: move;
 
@@ -45,5 +50,18 @@
 
     cursor: pointer;
     user-select: none;
+  }
+}
+
+.extra-template-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  font-size: 16px;
+
+  input {
+    width: 18px;
+    margin-right: 5px;
   }
 }

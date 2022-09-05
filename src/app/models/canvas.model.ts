@@ -3,6 +3,7 @@ export interface Canvas {
   height: number;
   content: number[];
   palette: string[];
+  startColor: number;
 }
 
 export interface PartialCanvas {
@@ -17,4 +18,9 @@ export interface PixelInfo {
 export interface Vector {
   x: number;
   y: number;
+}
+
+export interface ColorChangeInfo {
+  originalIndex: number;
+  color: string;
 }

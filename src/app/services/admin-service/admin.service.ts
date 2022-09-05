@@ -3,6 +3,7 @@ import { catchError, map, Observable, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { Tokens } from '../../models/tokens.model';
+import { ColorChangeInfo } from '../../models/canvas.model';
 
 @Injectable({
   providedIn: 'root',
@@ -23,5 +24,17 @@ export class AdminService {
         catchError(() => of({ token: undefined, refreshToken: undefined })),
         map((token: Tokens) => ({ success: !!token.token, token: token.token }))
       );
+  }
+
+  updatePalette(palette: ColorChangeInfo[], startColor: number, token: string) {
+    this.httpClient
+      .post(
+        environment.backendBase + '/api/Canvas/updatePalette',
+        { palette, startColor },
+        {
+          headers: { Authorization: 'Bearer ' + token },
+        }
+      )
+      .subscribe();
   }
 }
