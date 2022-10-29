@@ -9,5 +9,6 @@ export const environment = {
     measurementId: 'G-5FCP1175W7',
   },
   backendBase: 'http://localhost:5000',
+  static: true,
   production: false,
 };

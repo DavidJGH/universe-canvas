@@ -1,5 +1,11 @@
-<app-palette></app-palette>
-<app-connection-display></app-connection-display>
+<app-palette *ngIf="!environment.static"></app-palette>
+<app-connection-display *ngIf="!environment.static"></app-connection-display>
 <app-scalable-container>
-  <app-draw-canvas></app-draw-canvas>
+  <app-draw-canvas *ngIf="!environment.static"></app-draw-canvas>
+  <img
+    *ngIf="environment.static"
+    src="../../../assets/canvas_final.png"
+    alt="final canvas" />
 </app-scalable-container>
+
+<app-static-display *ngIf="environment.static"></app-static-display>

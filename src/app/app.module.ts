@@ -20,6 +20,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { CookieService } from 'ngx-cookie-service';
+import { StaticDisplayComponent } from './components/static-display/static-display.component';
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import { CookieService } from 'ngx-cookie-service';
     AdminPageComponent,
     AdminConfigurationComponent,
     AdminLoginComponent,
+    StaticDisplayComponent,
   ],
   imports: [
     BrowserModule,

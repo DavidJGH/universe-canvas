@@ -13,6 +13,7 @@ export const environment = {
     measurementId: 'G-5FCP1175W7',
   },
   backendBase: 'https://canvas-backend.herdlicka.dev',
+  static: true,
   production: false,
 };
 

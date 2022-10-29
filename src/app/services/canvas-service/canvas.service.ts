@@ -40,6 +40,10 @@ export class CanvasService {
   private hubConnection: signalR.HubConnection | undefined;
 
   constructor() {
+    if (environment.static) {
+      return;
+    }
+
     this.hubConnection = new signalR.HubConnectionBuilder()
       .withUrl(environment.backendBase + '/canvasHub')
       .withAutomaticReconnect([500, 1000, 2000, 2000, 5000, 5000, 10000, 30000])

@@ -2,6 +2,7 @@ import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { CanvasService } from '../../services/canvas-service/canvas.service';
 import { Subject, takeUntil } from 'rxjs';
 import { getScreenCenter } from '../../utils/window.utils';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-scalable-container',
@@ -26,19 +27,27 @@ export class ScalableContainerComponent implements OnInit, OnDestroy {
   constructor(private readonly canvasService: CanvasService) {}
 
   ngOnInit(): void {
-    this.canvasService.canvas$
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(({ canvas }) => {
-        const wasZero = this.canvasWidth === 0;
-        this.canvasWidth = canvas.width;
-        this.canvasHeight = canvas.height;
+    if (environment.static) {
+      const center = getScreenCenter();
+      this.canvasWidth = 500;
+      this.canvasHeight = 500;
+      this.xPosition = center.x - this.canvasWidth / 2;
+      this.yPosition = center.y - this.canvasHeight / 2;
+    } else {
+      this.canvasService.canvas$
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe(({ canvas }) => {
+          const wasZero = this.canvasWidth === 0;
+          this.canvasWidth = canvas.width;
+          this.canvasHeight = canvas.height;
 
-        if (wasZero) {
-          const center = getScreenCenter();
-          this.xPosition = center.x - this.canvasWidth / 2;
-          this.yPosition = center.y - this.canvasHeight / 2;
-        }
-      });
+          if (wasZero) {
+            const center = getScreenCenter();
+            this.xPosition = center.x - this.canvasWidth / 2;
+            this.yPosition = center.y - this.canvasHeight / 2;
+          }
+        });
+    }
   }
 
   @HostListener('wheel', ['$event'])
